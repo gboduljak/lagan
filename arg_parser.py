@@ -6,7 +6,7 @@ from utils import *
 
 
 def parse_args():
-  desc = "Pytorch implementation of U-GAT-IT"
+  desc = "Pytorch implementation of LaGAN"
   parser = argparse.ArgumentParser(description=desc)
   parser.add_argument('--phase', type=str, default='train', help='[train / test / translate]')
   parser.add_argument('--dataset', type=str, default='YOUR_DATASET_NAME', help='dataset name')
