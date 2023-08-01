@@ -225,8 +225,6 @@ class ResnetGenerator(nn.Module):
         nce_layers_outs.append(x)
       if layer == final_nce_layer:
         return nce_layers_outs
-    for out in nce_layers_outs:
-      print(out.shape)
     raise ValueError(
         'final nce layer must be within the encoder of the generator!'
     )
