@@ -667,14 +667,14 @@ class LaGAN:
       self.global_discriminator.load_state_dict(params['global_discriminator'])
     if self.use_local_discriminator:
       self.local_discriminator.load_state_dict(params['local_discriminator'])
-    self.start_iter = params['iter']
-    self.smallest_val_fid = params['smallest_val_fid']
-    # setup patch sampler
     self.patch_sampler.load_state_dict(params['patch_sampler'])
     # restore optimizers
     self.generator_optim.load_state_dict(params['generator_optim'])
     self.discriminator_optim.load_state_dict(params['discriminator_optim'])
     self.patch_sampler_optim.load_state_dict(params['patch_sampler_optim'])
+    # restore constants
+    self.start_iter = params['iter']
+    self.smallest_val_fid = params['smallest_val_fid']
 
   def eval(self):
     results_dir = Path(self.result_dir, self.dataset)
