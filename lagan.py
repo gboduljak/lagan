@@ -670,7 +670,6 @@ class LaGAN:
     self.start_iter = params['iter']
     self.smallest_val_fid = params['smallest_val_fid']
     # setup patch sampler
-    self.initialize_patch_sampler()
     self.patch_sampler.load_state_dict(params['patch_sampler'])
     # restore optimizers
     self.generator_optim.load_state_dict(params['generator_optim'])
