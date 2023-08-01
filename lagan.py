@@ -653,13 +653,13 @@ class LaGAN:
         )
     )
 
-  def load(self, cktpt_file_name: str):
+  def load(self, ckpt_file_name: str):
     params = torch.load(
         os.path.join(
             self.result_dir,
             self.dataset,
             'model',
-            cktpt_file_name
+            ckpt_file_name
         )
     )
     self.generator.load_state_dict(params['generator'])
@@ -789,7 +789,7 @@ class LaGAN:
     )
 
     if not len(model_list) == 0:
-      self.load(cktpt_file_name=self.ckpt)
+      self.load(ckpt_file_name=self.ckpt)
       print("[*] load successful")
     else:
       print("[*] load failed")
@@ -834,7 +834,7 @@ class LaGAN:
         )
     )
     if not len(model_list) == 0:
-      self.load(cktpt_file_name=self.ckpt)
+      self.load(ckpt_file_name=self.ckpt)
       print("[*] load successful")
     else:
       print("[*] load failed")
