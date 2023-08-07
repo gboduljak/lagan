@@ -580,20 +580,47 @@ class LaGAN:
           self.local_discriminator.eval()
         self.patch_sampler.eval()
 
+        try:
+          _, _ = next(trainA_eval_iter)
+        except:
+          trainA_eval_iter = iter(self.trainA_loader)
+        try:
+          _, _ = next(trainB_eval_iter)
+        except:
+          trainB_eval_iter = iter(self.trainB_loader)
+
+        try:
+          _, _ = next(valA_iter)
+        except:
+          valA_iter = iter(self.valA_loader)
+        try:
+          _, _ = next(valB_iter)
+        except:
+          valB_iter = iter(self.valB_loader)
+
+        try:
+          _, _ = next(testA_iter)
+        except:
+          testA_iter = iter(self.testA_loader)
+        try:
+          _, _ = next(testB_iter)
+        except:
+          testB_iter = iter(self.testB_loader)
+
         plot_translation_examples(
             generator=self.generator,
             patch_sampler=self.patch_sampler,
-            trainA_iter=iter(self.trainA_loader),
+            trainA_iter=trainA_eval_iter,
             trainA_loader=self.trainA_loader,
-            trainB_iter=iter(self.trainB_loader),
+            trainB_iter=trainB_eval_iter,
             trainB_loader=self.trainB_loader,
-            valA_iter=iter(self.valA_loader),
+            valA_iter=valA_iter,
             valA_loader=self.valA_loader,
-            valB_iter=iter(self.valB_loader),
+            valB_iter=valB_iter,
             valB_loader=self.valB_loader,
-            testA_iter=iter(self.testA_loader),
+            testA_iter=testA_iter,
             testA_loader=self.testA_loader,
-            testB_iter=iter(self.testB_loader),
+            testB_iter=testB_iter,
             testB_loader=self.testB_loader,
             device=self.device,
             A2B_results_filename=os.path.join(
