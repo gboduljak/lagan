@@ -20,6 +20,8 @@ def parse_args():
   parser.add_argument('--decay_lr', type=str2bool, default=True, help='should decay lr')
   parser.add_argument('--benchmark', type=str2bool, default=False)
   parser.add_argument('--resume', type=str2bool, default=False)
+  # Translate config
+  parser.add_argument('--translate_include_attention', type=str2bool, default=False)
   # U-GAT-IT Defaults
   parser.add_argument('--lr', type=float, default=0.0001, help='learning rate')
   parser.add_argument('--weight_decay', type=float, default=0.0001, help='weight decay')
@@ -43,7 +45,7 @@ def parse_args():
   parser.add_argument('--img_channels', type=int, default=3, help='image channels')
   # Results
   parser.add_argument('--result_dir', type=str, default='results', help='directory to save the results')
-  # Training device
+  # Device
   parser.add_argument('--device', type=str, default='cuda',
                       choices=['cpu', 'cuda', 'mps'],
                       help='Set gpu mode; [cpu, cuda, mps]')

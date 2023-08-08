@@ -10,7 +10,7 @@ from torch.utils.data import DataLoader
 from utils import *
 
 
-def translate_dataset(dataset_loader: DataLoader, translations_dirs: List[str], generator: nn.Module, device: torch.device):
+def translate_dataset(dataset_loader: DataLoader, translations_dirs: List[str], generator: nn.Module, device: torch.device, include_attention: bool = False):
   generator = generator.to(device)
 
   with torch.inference_mode():
@@ -18,14 +18,25 @@ def translate_dataset(dataset_loader: DataLoader, translations_dirs: List[str], 
       real_A = real_A.to(device)
       img_path, _ = dataset_loader.dataset.samples[n]
       img_name = Path(img_path).name.split('.')[0]
-      fake_B = generator(real_A, cam=False)
+      if not include_attention:
+        fake_B = generator(real_A, cam=False)
+        fake_B_RGB = RGB2BGR(tensor2numpy(denorm(fake_B[0]))) * 255.0
+      else:
+        _, _, H, W = real_A.shape
+        assert (H == W)
+        fake_B, _, fake_B_heatmap = generator(real_A, cam=True)
+        fake_B_RGB = np.hstack([
+            cam(tensor2numpy(fake_B_heatmap[0]), H) * 255.0,
+            RGB2BGR(tensor2numpy(denorm(fake_B[0]))) * 255.0,
+        ])
+
       for translations_dir in translations_dirs:
         cv2.imwrite(
             os.path.join(
                 translations_dir,
                 f'{img_name}_fake_B.jpg'
             ),
-            RGB2BGR(tensor2numpy(denorm(fake_B[0]))) * 255.0
+            fake_B_RGB
         )
 
 

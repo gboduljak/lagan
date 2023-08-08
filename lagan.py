@@ -82,6 +82,9 @@ class LaGAN:
     """QSA """
     self.qsa_max_spatial_size = args.qsa_max_spatial_size
 
+    """Translate"""
+    self.translate_include_attention = args.translate_include_attention
+
     print()
     print("##### Information #####")
     print("# CUT sampling type : ", self.cut_type)
@@ -902,19 +905,22 @@ class LaGAN:
         dataset_loader=self.trainA_without_aug_loader,
         translations_dirs=[train_translated_imgs_dir, full_translated_imgs_dir],
         generator=self.generator,
-        device=self.device
+        device=self.device,
+        include_attention=self.translate_include_attention
     )
     print('translating val...')
     translate_dataset(
         dataset_loader=self.valA_loader,
         translations_dirs=[val_translated_imgs_dir, full_translated_imgs_dir],
         generator=self.generator,
-        device=self.device
+        device=self.device,
+        include_attention=self.translate_include_attention
     )
     print('translating test...')
     translate_dataset(
         dataset_loader=self.testA_loader,
         translations_dirs=[test_translated_imgs_dir, full_translated_imgs_dir],
         generator=self.generator,
-        device=self.device
+        device=self.device,
+        include_attention=self.translate_include_attention
     )
