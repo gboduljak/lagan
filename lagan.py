@@ -84,6 +84,7 @@ class LaGAN:
 
     """Translate"""
     self.translate_include_attention = args.translate_include_attention
+    self.translate_attention_position = args.translate_attention_position
 
     print()
     print("##### Information #####")
@@ -107,6 +108,7 @@ class LaGAN:
     print("# nce_weight : ", self.nce_weight)
 
     print("##### CUT #####")
+    print("# patch sampling type : ", self.cut_type)
     print("# nce temperature : ", self.nce_temperature)
     print("# nce layers : ", self.nce_layers)
     print("# nce patches : ", self.nce_num_patches)
@@ -690,7 +692,8 @@ class LaGAN:
             self.dataset,
             'model',
             ckpt_file_name
-        )
+        ),
+        map_location=self.device
     )
     self.generator.load_state_dict(params['generator'])
     if self.use_global_discriminator:
@@ -906,7 +909,8 @@ class LaGAN:
         translations_dirs=[train_translated_imgs_dir, full_translated_imgs_dir],
         generator=self.generator,
         device=self.device,
-        include_attention=self.translate_include_attention
+        include_attention=self.translate_include_attention,
+        attention_position=self.translate_attention_position,
     )
     print('translating val...')
     translate_dataset(
@@ -914,7 +918,8 @@ class LaGAN:
         translations_dirs=[val_translated_imgs_dir, full_translated_imgs_dir],
         generator=self.generator,
         device=self.device,
-        include_attention=self.translate_include_attention
+        include_attention=self.translate_include_attention,
+        attention_position=self.translate_attention_position,
     )
     print('translating test...')
     translate_dataset(
@@ -922,5 +927,6 @@ class LaGAN:
         translations_dirs=[test_translated_imgs_dir, full_translated_imgs_dir],
         generator=self.generator,
         device=self.device,
-        include_attention=self.translate_include_attention
+        include_attention=self.translate_include_attention,
+        attention_position=self.translate_attention_position,
     )

@@ -22,6 +22,11 @@ def parse_args():
   parser.add_argument('--resume', type=str2bool, default=False)
   # Translate config
   parser.add_argument('--translate_include_attention', type=str2bool, default=False)
+  parser.add_argument('--translate_attention_position',
+                      type=str,
+                      default='horizontal',
+                      choices=['horizontal', 'vertical']
+                      )
   # U-GAT-IT Defaults
   parser.add_argument('--lr', type=float, default=0.0001, help='learning rate')
   parser.add_argument('--weight_decay', type=float, default=0.0001, help='weight decay')

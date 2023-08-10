@@ -10,9 +10,14 @@ from torch.utils.data import DataLoader
 from utils import *
 
 
-def translate_dataset(dataset_loader: DataLoader, translations_dirs: List[str], generator: nn.Module, device: torch.device, include_attention: bool = False):
+def translate_dataset(dataset_loader: DataLoader,
+                      translations_dirs: List[str],
+                      generator: nn.Module,
+                      device: torch.device,
+                      include_attention: bool = False,
+                      attention_position: str = 'horizontal'
+                      ):
   generator = generator.to(device)
-
   with torch.inference_mode():
     for n, (real_A, _) in enumerate(dataset_loader):
       real_A = real_A.to(device)
@@ -25,10 +30,16 @@ def translate_dataset(dataset_loader: DataLoader, translations_dirs: List[str], 
         _, _, H, W = real_A.shape
         assert (H == W)
         fake_B, _, fake_B_heatmap = generator(real_A, cam=True)
-        fake_B_RGB = np.hstack([
-            cam(tensor2numpy(fake_B_heatmap[0]), H) * 255.0,
-            RGB2BGR(tensor2numpy(denorm(fake_B[0]))) * 255.0,
-        ])
+        if attention_position == 'horizontal':
+          fake_B_RGB = np.hstack([
+              cam(tensor2numpy(fake_B_heatmap[0]), H) * 255.0,
+              RGB2BGR(tensor2numpy(denorm(fake_B[0]))) * 255.0,
+          ])
+        else:
+          fake_B_RGB = np.vstack([
+              cam(tensor2numpy(fake_B_heatmap[0]), H) * 255.0,
+              RGB2BGR(tensor2numpy(denorm(fake_B[0]))) * 255.0,
+          ])
 
       for translations_dir in translations_dirs:
         cv2.imwrite(
@@ -114,38 +125,41 @@ def plot_translation_examples(
           B_examples_iter = iter(B_examples_loader)
           real_B, _ = next(B_examples_iter)
 
+        real_A = real_A.to(device)
+        real_B = real_B.to(device)
+
         if cut_type == 'vanilla':
           A2B.append(generate_translation_example(real_A, generator, include_cam_heatmap=True, device=device))
           B2B.append(generate_translation_example(real_B, generator, include_cam_heatmap=True, device=device))
         else:
           loss_attn_A2B = patch_sampler(
-              generator(real_A, nce=True),
+              generator.encode(real_A),
               return_only_full_attn_maps=True,
           )
           loss_attn_B2B = patch_sampler(
-              generator(real_B, nce=True),
+              generator.encode(real_B),
               return_only_full_attn_maps=True,
           )
           A2B.append(
               np.vstack(
-                  generate_translation_example(
+                  [generate_translation_example(
                       real_A,
                       generator,
                       include_cam_heatmap=True,
                       device=device
-                  ) + [
+                  )] + [
                       cam(tensor2numpy(attn), img_size) * 255
                       for attn in loss_attn_A2B
                   ])
           )
           B2B.append(
               np.vstack(
-                  generate_translation_example(
+                  [generate_translation_example(
                       real_B,
                       generator,
                       include_cam_heatmap=True,
                       device=device
-                  ) + [
+                  )] + [
                       cam(tensor2numpy(attn), img_size) * 255
                       for attn in loss_attn_B2B
                   ])
