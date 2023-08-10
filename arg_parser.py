@@ -57,8 +57,8 @@ def parse_args():
   parser.add_argument('--seed', type=int, default=269902365, help='seed')
   # CUT Defaults
   parser.add_argument('--nce_weight', type=float, default=10.0, help='weight for NCE loss: NCE(G(X), X)')
-  parser.add_argument('--cut_type', type=str, default='vanilla',
-                      choices=['vanilla',
+  parser.add_argument('--patch_sampling_type', type=str, default='random',
+                      choices=['random',
                                QSAType.GLOBAL,
                                QSAType.LOCAL,
                                QSAType.GLOBAL_AND_LOCAL],

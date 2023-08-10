@@ -68,7 +68,7 @@ class LaGAN:
     self.seed = args.seed
 
     """ CUT """
-    self.cut_type = args.cut_type
+    self.patch_sampling_type = args.patch_sampling_type
     self.nce_temperature = args.nce_temperature
     self.nce_patch_embedding_dim = args.nce_patch_embedding_dim
     self.nce_num_patches = args.nce_num_patches
@@ -88,7 +88,6 @@ class LaGAN:
 
     print()
     print("##### Information #####")
-    print("# CUT sampling type : ", self.cut_type)
     print("# dataset : ", self.dataset)
     if self.ckpt:
       print("# ckpt : ", self.ckpt)
@@ -108,7 +107,7 @@ class LaGAN:
     print("# nce_weight : ", self.nce_weight)
 
     print("##### CUT #####")
-    print("# patch sampling type : ", self.cut_type)
+    print("# patch sampling type : ", self.patch_sampling_type)
     print("# nce temperature : ", self.nce_temperature)
     print("# nce layers : ", self.nce_layers)
     print("# nce patches : ", self.nce_num_patches)
@@ -201,7 +200,7 @@ class LaGAN:
       ).to(self.device)
 
     """Define Patch Sampler"""
-    if self.cut_type == 'vanilla':
+    if self.patch_sampling_type == 'random':
       self.patch_sampler = PatchSampler(
           patch_embedding_dim=self.nce_patch_embedding_dim,
           num_patches_per_layer=self.nce_num_patches,
@@ -211,7 +210,7 @@ class LaGAN:
       self.patch_sampler = QSAPatchSampler(
           patch_embedding_dim=self.nce_patch_embedding_dim,
           num_patches_per_layer=self.nce_num_patches,
-          qsa_type=self.cut_type,
+          qsa_type=self.patch_sampling_type,
           max_spatial_size=self.qsa_max_spatial_size,
           device=self.device
       )
@@ -290,7 +289,7 @@ class LaGAN:
       self.patch_sampler(self.generator.encode(x))
 
   def sample_patches(self, feat_q: torch.Tensor, feat_k: torch.Tensor):
-    if self.cut_type == 'vanilla':
+    if self.patch_sampling_type == 'random':
       feat_k_pool, feat_k_pool_idx = self.patch_sampler(feat_k)
       feat_q_pool, _ = self.patch_sampler(feat_q, feat_k_pool_idx)
       return (feat_q_pool, feat_k_pool)
@@ -643,7 +642,7 @@ class LaGAN:
                 'B2B_%07d.png' % it
             ),
             img_size=self.img_size,
-            cut_type=self.cut_type
+            patch_sampling_type=self.patch_sampling_type
         )
 
         self.generator.train()

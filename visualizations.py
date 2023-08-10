@@ -101,7 +101,7 @@ def plot_translation_examples(
         val_examples_num: int = 4,
         test_examples_num: int = 4,
         img_size: int = 256,
-        cut_type: str = 'vanilla'
+        patch_sampling_type: str = 'random'
 ):
 
   def generate_translation_examples_matrix(
@@ -128,7 +128,7 @@ def plot_translation_examples(
         real_A = real_A.to(device)
         real_B = real_B.to(device)
 
-        if cut_type == 'vanilla':
+        if patch_sampling_type == 'random':
           A2B.append(generate_translation_example(real_A, generator, include_cam_heatmap=True, device=device))
           B2B.append(generate_translation_example(real_B, generator, include_cam_heatmap=True, device=device))
         else:
