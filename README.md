@@ -8,12 +8,13 @@ LaGAN's implementation is based on [U-GAT-IT](https://arxiv.org/abs/1907.10830)'
 **unzip** is required to unzip datasets via the setup tool.
 On many UNIX systems, the dependency can be installed by executing `apt-get install unzip`.
 
-#### Install pipenv
-There are multiple ways to set up **pipenv**, perhaps the easiest is `pip install pipenv`.
-
-#### Preferred dependency installation
 The preferred way to install Python dependencies for this project is via **pipenv**,
 a tool for virtual environment and package management.
+
+### Install pipenv
+There are multiple ways to set up **pipenv**, perhaps the easiest is `pip install pipenv`.
+
+### Preferred dependency installation
 By executing `pipenv install`, a new virtual environment (for this project) will be created and dependencies will be installed.
 
 #### Alternative dependency installation
