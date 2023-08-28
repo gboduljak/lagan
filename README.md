@@ -133,14 +133,15 @@ python cli.py --phase train \
               --lr $LR \
               --iters $ITERS
 ```
+The code above is also provided in **example_train.sh**.
+
 When training, the **results** folder will be created, containing training logs and checkpoints,
 grouped by ```$DATASET```. The checkpoints are stored in ```./results/$DATASET/model```. The logs will include loss logs, learning rate scheduler logs and the image translations obtained during the training in various stages.
 
 ### Dataset translation
 To translate the dataset, it is necessary to specify the checkpoint, the number of bottleneck 
 blocks and the layers from which patches are sampled. This is necessary to properly configure the model and load the appropriate checkpoint. The checkpoint ```$CKPT.pt``` must be present in ```./results/$DATASET/model```.
-
-To translate entire source domain to the target domain, we execute 
+To translate the entire source domain to the target domain, we execute 
 ```bash
 python cli.py --phase translate \
               --dataset $DATASET \
