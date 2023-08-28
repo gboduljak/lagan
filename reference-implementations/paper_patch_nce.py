@@ -1,6 +1,8 @@
 import torch
 from torch import nn
 
+# From https://github.com/taesungp/contrastive-unpaired-translation
+
 
 class PatchNCELoss(nn.Module):
   def __init__(self, temperature: float, batch_size: int, includes_all_negatives_from_minibatch: bool = False):

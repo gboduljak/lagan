@@ -5,6 +5,8 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torch.nn import init
 
+# From https://github.com/sapphire497/query-selected-attention
+
 
 def init_weights(net, init_type='normal', init_gain=0.02, debug=False):
   """Initialize network weights.
